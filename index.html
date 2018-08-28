@@ -12,20 +12,20 @@
     </style>
 
   	<script language="JavaScript">
-	  	function getIdFromURL() {
-	  		var url = document.getElementById("user_link").value;
+	  	function getIdFromURL(link) {
 	  		var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-		    var match = url.match(regExp);
+		    var match = link.match(regExp);
 		    if (match && match[2].length == 11) {
 		        return match[2];
 		    } else {
 		        return 'error';
 		    }
 	  	}
-	    function showLink() {
+	    function showLink(link) {
+	    	document.getElementById('display1').innerHTML = 'vatika';
 	        document.getElementById('display').innerHTML = 
 	                    "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" 
-	                    + getIdFromURL()
+	                    + getIdFromURL(link)
 	                    +"\"> </iframe>"
 	    }
   	</script>
@@ -34,6 +34,12 @@
 	<script>
 	  $(function () {
 	    var socket = io();
+
+	    $('#link_button').click(function() {
+	    	socket.emit('get video', $('#user_link').val());
+	    	return false;
+	    });
+
 	    $('form').submit(function(){
 	      socket.emit('chat message', $('#m').val());
 	      $('#m').val('');
@@ -43,6 +49,11 @@
 	    socket.on('chat message', function(msg){
       		$('#messages').append($('<li>').text(msg));
     	});
+
+	    socket.on('get video', function(link) {
+	    	showLink(link);
+	    });
+
 	  });
 	</script>
 <body>
@@ -52,7 +63,9 @@
 Enter link of youtube video:<br>
 <input type="text" id="user_link" name="youtube_link">
 
-<input type="submit" onclick="showLink();"><br>
+<input id = "link_button" type="submit"><br>
+<p><span id="display1"></span></p>
+
 <p><span id="display"></span></p>
 
 
