@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <script language="JavaScript">
+    function showLink() {
+        document.getElementById('display').innerHTML = 
+                    "<iframe width=\"420\" height=\"345\" src=" + 
+                    document.getElementById("user_link").value +
+                    "> </iframe>"
+    }
+  </script>
+<body>
+
+<h2>Youtube Syncer</h2>
+
+Enter link of youtube video:<br>
+<input type="text" id="user_link" name="youtube_link">
+
+<input type="submit" onclick="showLink();"><br>
+
+<p><span id = "display"> </span></p>
+</body>
+</html>
