@@ -10,8 +10,14 @@
 	      #messages li { padding: 5px 10px; }
 	      #messages li:nth-child(odd) { background: #eee; }
     </style>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  	<script>
+		var player;
+		var tag;
+		var firstScriptTag;
+		
 
-  	<script language="JavaScript">
 	  	function getIdFromURL(link) {
 	  		var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
 		    var match = link.match(regExp);
@@ -22,16 +28,32 @@
 		    }
 	  	}
 	    function showLink(link) {
-	    	document.getElementById('display1').innerHTML = 'vatika';
 	        document.getElementById('display').innerHTML = 
-	                    "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" 
+	                    "<iframe id=\"video\" width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" 
 	                    + getIdFromURL(link)
-	                    +"\"> </iframe>"
+	                    +"?enablejsapi=1\"> </iframe>";
+	    	tag = document.createElement('script');
+			tag.src = "https://www.youtube.com/iframe_api";
+			firstScriptTag = document.getElementsByTagName('script')[0];
+			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+					
 	    }
-  	</script>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-	<script>
+
+		function onYouTubeIframeAPIReady() {
+		  // create the global player from the specific iframe (#video)
+		  player = new YT.Player('video', {
+		    events: {
+		      // call this function when player is ready to use
+		      'onReady': onPlayerReady
+		      // 'onStateChange': onPlayerStateChange
+		    }
+		  });
+		}
+		
+		function onPlayerReady(event) {
+			socket.emit('player ready');
+		}
+
 	  $(function () {
 	    var socket = io();
 
@@ -58,7 +80,7 @@
 	</script>
 <body>
 
-<h2>Youtube Syncer</h2>
+<h1>Youtube Syncer</h1>
 
 Enter link of youtube video:<br>
 <input type="text" id="user_link" name="youtube_link">
@@ -68,6 +90,14 @@ Enter link of youtube video:<br>
 
 <p><span id="display"></span></p>
 
+
+<h2> Chat <h2>
+
+
+<script>
+
+
+</script>
 
 <ul id="messages"></ul>
 <form action="">

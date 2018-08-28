@@ -21,5 +21,11 @@ io.on('connection', function(socket) {
 	socket.on('get video', function(link) {
 			io.emit('get video', link);
 	});
+	socket.on('player ready', function() {
+		console.log('player ready');
+	});
+	// socket.on('state change', function(a) {
+	// 		console.log('state change:');
+	// });
 });
 
