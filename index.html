@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
   <script language="JavaScript">
+  	function getIdFromURL() {
+  		var url = document.getElementById("user_link").value;
+  		var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+	    var match = url.match(regExp);
+	    if (match && match[2].length == 11) {
+	        return match[2];
+	    } else {
+	        return 'error';
+	    }
+  	}
     function showLink() {
         document.getElementById('display').innerHTML = 
-                    "<iframe width=\"420\" height=\"345\" src=" + 
-                    document.getElementById("user_link").value +
-                    "> </iframe>"
+                    "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" 
+                    + getIdFromURL()
+                    +"\"> </iframe>"
     }
   </script>
 <body>
